@@ -1422,7 +1422,7 @@ struct device_attribute *attr, const char *buf, size_t count)
 	if (touch_pdata->raw_head != touch_pdata->raw_tail)
 		sysfs_notify(&xiaomi_touch_dev.dev->kobj, NULL,  "update_rawdata");
 
-	pr_info("%s notify buf\n", __func__);
+	//pr_info("%s notify buf\n", __func__);
 
 	return count;
 }
