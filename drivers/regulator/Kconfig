@@ -1574,6 +1574,11 @@ config REGULATOR_MEM_ACC
           controls delays applied for memory accesses.  This driver
           configures the power-mode(corner) for the memory accelerator.
 
+config I2C_RETRY
+	bool "Stub Regulator"
+	help
+	  This help control I2C retry functions
+
 config REGULATOR_WL2866D
 	tristate "Xiaomi WL2866D regulator Driver"
 	help
