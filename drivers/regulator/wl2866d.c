@@ -103,6 +103,11 @@ static int wl2866d_read(struct regmap *regmap,  u8 reg, u8 *val, int count)
 		rc = regmap_bulk_read(regmap, reg, val, count);
 		if (rc < 0)
 			pr_err("wl2866d read: failed to read 0x%02x again\n", reg);
+		else {
+			pr_err("wl2866d read: success to read 0x%02x again, "
+			       "crash for debug\n", reg);
+			rc = -EINVAL;
+		}
 	}
 
 	return rc;
@@ -124,6 +129,11 @@ static int wl2866d_write(struct regmap *regmap, u8 reg, const u8 *val,
 		rc = regmap_bulk_write(regmap, reg, val, count);
 		if (rc < 0)
 			pr_err("wl2866d write: failed to write 0x%02x again\n", reg);
+		else {
+			pr_err("wl2866d write: success to write 0x%02x again, "
+			       "crash for debug\n", reg);
+			rc = -EINVAL;
+		}
 	}
 
 	return rc;
@@ -148,6 +158,11 @@ static int wl2866d_masked_write(struct regmap *regmap, u8 reg, u8 mask,
 		if (rc < 0)
 			pr_err("wl2866d masked write: failed to write 0x%02x to "
 			       "0x%02x with mask 0x%02x\n", val, reg, mask);
+		else
+			pr_err("wl2866d masked write: failed to write 0x%02x to "
+			       "0x%02x with mask 0x%02x, "
+			       "crash for debug\n", val, reg, mask);
+			rc = -EINVAL;
 	}
 
 	return rc;
