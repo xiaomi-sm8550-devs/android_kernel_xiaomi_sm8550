@@ -1649,7 +1649,7 @@ static ssize_t gesture_single_tap_enabled_store(struct device *dev,
 	}
 	touch_data = touch_pdata->touch_data[0];
 
-	if (!touch_data->setModeValue)
+	if (!touch_data->getModeValue || !touch_data->setModeValue)
 		return -ENOMEM;
 
 	if (sscanf(buf, "%d", &input) < 0 || input > 1)
@@ -1715,7 +1715,7 @@ static ssize_t gesture_double_tap_enabled_store(struct device *dev,
 	}
 	touch_data = touch_pdata->touch_data[0];
 
-	if (!touch_data->setModeValue)
+	if (!touch_data->getModeValue || !touch_data->setModeValue)
 		return -ENOMEM;
 
 	if (sscanf(buf, "%d", &input) < 0 || input > 1)
@@ -1773,7 +1773,7 @@ fod_longpress_gesture_enabled_store(struct device *dev,
 	}
 	touch_data = touch_pdata->touch_data[0];
 
-	if (!touch_data->setModeValue)
+	if (!touch_data->getModeValue || !touch_data->setModeValue)
 		return -ENOMEM;
 
 	if (sscanf(buf, "%d", &input) < 0 || input > 1)
