@@ -1642,26 +1642,33 @@ static ssize_t gesture_single_tap_enabled_store(struct device *dev,
 						const char *buf, size_t count)
 {
 	struct xiaomi_touch_interface *touch_data = NULL;
+	bool changed = false;
 	unsigned int input;
+	unsigned int i;
 
-	if (!touch_pdata) {
-		return -ENOMEM;
-	}
-	touch_data = touch_pdata->touch_data[0];
-
-	if (!touch_data->getModeValue || !touch_data->setModeValue)
+	if (!touch_pdata)
 		return -ENOMEM;
 
 	if (sscanf(buf, "%d", &input) < 0 || input > 1)
 		return -EINVAL;
 
-	if (touch_data->getModeValue(Touch_Singletap_Gesture,
-				     GET_CUR_VALUE) != input) {
-		sysfs_notify(&xiaomi_touch_dev.dev->kobj, NULL,
-			     "gesture_single_tap_enabled");
+	for (i = 0; i < 2; i++) {
+		touch_data = touch_pdata->touch_data[i];
+
+		if (!touch_data->getModeValue || !touch_data->setModeValue)
+			continue;
+
+		if (touch_data->getModeValue(Touch_Singletap_Gesture,
+					     GET_CUR_VALUE) != input) {
+			touch_data->setModeValue(Touch_Singletap_Gesture,
+						 input);
+			changed = true;
+		}
 	}
 
-	touch_data->setModeValue(Touch_Singletap_Gesture, input);
+	if (changed)
+		sysfs_notify(&xiaomi_touch_dev.dev->kobj, NULL,
+			     "gesture_single_tap_enabled");
 
 	return count;
 }
@@ -1708,26 +1715,32 @@ static ssize_t gesture_double_tap_enabled_store(struct device *dev,
 						const char *buf, size_t count)
 {
 	struct xiaomi_touch_interface *touch_data = NULL;
+	bool changed = false;
 	unsigned int input;
+	unsigned int i;
 
-	if (!touch_pdata) {
-		return -ENOMEM;
-	}
-	touch_data = touch_pdata->touch_data[0];
-
-	if (!touch_data->getModeValue || !touch_data->setModeValue)
+	if (!touch_pdata)
 		return -ENOMEM;
 
 	if (sscanf(buf, "%d", &input) < 0 || input > 1)
 		return -EINVAL;
 
-	if (touch_data->getModeValue(Touch_Doubletap_Mode,
-				     GET_CUR_VALUE) != input) {
-		sysfs_notify(&xiaomi_touch_dev.dev->kobj, NULL,
-			     "gesture_double_tap_enabled");
+	for (i = 0; i < 2; i++) {
+		touch_data = touch_pdata->touch_data[i];
+
+		if (!touch_data->getModeValue || !touch_data->setModeValue)
+			continue;
+
+		if (touch_data->getModeValue(Touch_Doubletap_Mode,
+					     GET_CUR_VALUE) != input) {
+			touch_data->setModeValue(Touch_Doubletap_Mode, input);
+			changed = true;
+		}
 	}
 
-	touch_data->setModeValue(Touch_Doubletap_Mode, input);
+	if (changed)
+		sysfs_notify(&xiaomi_touch_dev.dev->kobj, NULL,
+			     "gesture_double_tap_enabled");
 
 	return count;
 }
@@ -1746,9 +1759,8 @@ static ssize_t fod_longpress_gesture_enabled_show(struct device *dev,
 {
 	struct xiaomi_touch_interface *touch_data = NULL;
 
-	if (!touch_pdata) {
+	if (!touch_pdata)
 		return -ENOMEM;
-	}
 
 	touch_data = touch_pdata->touch_data[0];
 
@@ -1766,26 +1778,33 @@ fod_longpress_gesture_enabled_store(struct device *dev,
 				    const char *buf, size_t count)
 {
 	struct xiaomi_touch_interface *touch_data = NULL;
+	bool changed = false;
 	unsigned int input;
+	unsigned int i;
 
-	if (!touch_pdata) {
-		return -ENOMEM;
-	}
-	touch_data = touch_pdata->touch_data[0];
-
-	if (!touch_data->getModeValue || !touch_data->setModeValue)
+	if (!touch_pdata)
 		return -ENOMEM;
 
 	if (sscanf(buf, "%d", &input) < 0 || input > 1)
 		return -EINVAL;
 
-	if (touch_data->getModeValue(Touch_Fod_Longpress_Gesture,
-				     GET_CUR_VALUE) != input) {
-		sysfs_notify(&xiaomi_touch_dev.dev->kobj, NULL,
-			     "fod_longpress_gesture_enabled");
+	for (i = 0; i < 2; i++) {
+		touch_data = touch_pdata->touch_data[i];
+
+		if (!touch_data->getModeValue || !touch_data->setModeValue)
+			continue;
+
+		if (touch_data->getModeValue(Touch_Fod_Longpress_Gesture,
+					     GET_CUR_VALUE) != input) {
+			touch_data->setModeValue(Touch_Fod_Longpress_Gesture,
+						 input);
+			changed = true;
+		}
 	}
 
-	touch_data->setModeValue(Touch_Fod_Longpress_Gesture, input);
+	if (changed)
+		sysfs_notify(&xiaomi_touch_dev.dev->kobj, NULL,
+			     "fod_longpress_gesture_enabled");
 
 	return count;
 }
