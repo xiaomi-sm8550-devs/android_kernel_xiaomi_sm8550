@@ -167,3 +167,8 @@ arch/*/boot/dts/vendor
 
 # Documentation toolchain
 sphinx_*/
+
+# Trash
+out/
+*.zip
+*.log
