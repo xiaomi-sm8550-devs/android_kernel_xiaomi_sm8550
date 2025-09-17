@@ -2229,3 +2229,7 @@ config TARGET_PRODUCT_SOCRATES
 config TARGET_PRODUCT_NUWA
 	bool "Target product is nuwa"
 	default n
+
+config TARGET_PRODUCT_ISHTAR
+	bool "Target product is ishtar"
+	default n
