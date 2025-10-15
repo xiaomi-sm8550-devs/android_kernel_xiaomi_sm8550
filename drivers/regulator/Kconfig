@@ -1588,4 +1588,12 @@ config REGULATOR_WL2868C
 		regulator. The regulator is a programmable power management IC
 		(PMIC), it is controlled by I2C and provides one BUCK, one BOOST
 		and four LDO outputs.
+
+config REGULATOR_WillSemi_WL2866D
+	tristate "WILL Semi Technologies Inc. WL2866D regulator driver"
+	depends on I2C
+	help
+	  This driver controls WL2866D PMIC chip and the voltage
+	  regulators found in WILL Semi Technologies Inc. WL2866D
+	  PMIC.
 endif
