@@ -1,4 +1,4 @@
-config XRING_NT36532
+config XIAOMI_NT36532
 	tristate "support kernel NT36532 touch"
 	help
 	  Say M here if you have a Novatek NT36xxx no flash touchscreen connected

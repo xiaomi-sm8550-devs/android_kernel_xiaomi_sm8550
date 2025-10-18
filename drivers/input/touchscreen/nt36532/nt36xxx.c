@@ -28,7 +28,7 @@
 #include "nt36xxx.h"
 #include <linux/pinctrl/consumer.h>
 #if defined(CONFIG_DRM_PANEL)
-#include <soc/xring/display/panel_event_notifier.h>
+#include <linux/soc/qcom/panel_event_notifier.h>
 #include <drm/drm_panel.h>
 #elif defined(CONFIG_DRM_MSM)
 #include <linux/msm_drm_notify.h>
@@ -93,8 +93,8 @@ extern void Boot_Update_Firmware(struct work_struct *work);
 
 #if defined(CONFIG_DRM_PANEL)
 static struct device_node *panel_node;
-static void nvt_drm_panel_notifier_callback(enum xring_panel_event_tag notifier_tag,
-                 struct xring_panel_event_notification *notification, void *client_data);
+static void nvt_drm_panel_notifier_callback(enum panel_event_notifier_tag notifier_tag,
+                 struct panel_event_notifier_tag *notification, void *client_data);
 #elif defined(_MSM_DRM_NOTIFY_H_)
 static int nvt_drm_notifier_callback(struct notifier_block *self, unsigned long event, void *data);
 #elif defined(CONFIG_FB)
@@ -3220,8 +3220,8 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 
 #if defined(CONFIG_DRM_PANEL)
     if (panel_node) {
-            ts->notifier_cookie = xring_panel_event_notifier_register(XRING_PANEL_EVENT_TAG_PRIMARY,
-                            XRING_PANEL_EVENT_CLIENT_SECONDARY_TOUCH, panel_node,
+            ts->notifier_cookie = panel_event_notifier_register(PANEL_EVENT_NOTIFICATION_PRIMARY,
+                            PANEL_EVENT_NOTIFICATION_SECONDARY, panel_node,
                             &nvt_drm_panel_notifier_callback, (void *)ts);
             if (!ts->notifier_cookie) {
                     NVT_LOG("ERROR: register notifier failed!\n");
@@ -3480,7 +3480,7 @@ static void nvt_ts_remove(struct spi_device *client)
 	if (panel_node && ts->notifier_cookie){
 		of_node_put(panel_node);
 		panel_node = NULL;
-		xring_panel_event_notifier_unregister(ts->notifier_cookie);
+		panel_event_notifier_unregister(ts->notifier_cookie);
 		NVT_ERR("Error occurred while unregistering drm_panel_notifier.\n");
 	}
 #elif defined(_MSM_DRM_NOTIFY_H_)
@@ -3591,7 +3591,7 @@ static void nvt_ts_shutdown(struct spi_device *client)
 
 #if defined(CONFIG_DRM_PANEL)
 	if (panel_node && ts->notifier_cookie){
-		xring_panel_event_notifier_unregister(ts->notifier_cookie);
+		panel_event_notifier_unregister(ts->notifier_cookie);
 		NVT_ERR("Error occurred while unregistering drm_panel_notifier.\n");
 	}
 #elif defined(_MSM_DRM_NOTIFY_H_)
@@ -3898,8 +3898,8 @@ static int32_t nvt_ts_resume(struct device *dev)
 
 
 #if defined(CONFIG_DRM_PANEL)
-static void nvt_drm_panel_notifier_callback(enum xring_panel_event_tag notifier_tag,
-                 struct xring_panel_event_notification *notification, void *client_data)
+static void nvt_drm_panel_notifier_callback(enum panel_event_notifier_tag notifier_tag,
+                 struct panel_event_notification *notification, void *client_data)
 {
 	if (!notification) {
 		NVT_LOG("Invalid notification\n");
