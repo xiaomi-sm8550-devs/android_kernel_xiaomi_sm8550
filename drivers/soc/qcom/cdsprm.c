@@ -546,6 +546,8 @@ int cdsprm_cxlimit_camera_activity_notify(unsigned int b_enabled)
 {
 	struct sysmon_msg_tx rpmsg_msg_tx;
 
+	 int result = -EINVAL;
+
 	if (!gcdsprm.b_cx_limit_en)
 		return -EINVAL;
 
@@ -557,12 +559,12 @@ int cdsprm_cxlimit_camera_activity_notify(unsigned int b_enabled)
 		rpmsg_msg_tx.fs.camera.b_enabled =
 				b_enabled;
 		rpmsg_msg_tx.size = sizeof(rpmsg_msg_tx);
-		rpmsg_send(gcdsprm.rpmsgdev->ept,
+		result = rpmsg_send(gcdsprm.rpmsgdev->ept,
 			&rpmsg_msg_tx,
 			sizeof(rpmsg_msg_tx));
 	}
 
-	return 0;
+	return result;
 }
 EXPORT_SYMBOL(cdsprm_cxlimit_camera_activity_notify);
 
