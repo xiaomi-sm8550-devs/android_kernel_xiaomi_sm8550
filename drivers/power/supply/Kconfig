@@ -442,6 +442,11 @@ config QTI_BATTERY_CHARGER
 	  To compile the driver as a module, choose M here: the module will be
 	  called qti_battery_charger.
 
+config XM_POGO_DRIVER
+	tristate "Xiaomi pogo power supply config"
+	help
+	  Say Y or M here to enable xiaomi power supply
+
 config CHARGER_88PM860X
 	tristate "Marvell 88PM860x Charger driver"
 	depends on MFD_88PM860X && BATTERY_88PM860X
