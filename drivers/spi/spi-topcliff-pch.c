@@ -1450,16 +1450,11 @@ static void pch_spi_pd_remove(struct platform_device *plat_dev)
 		free_irq(board_dat->pdev->irq, data);
 	}
 
-	spi_master_get(data->master);
-
-	spi_unregister_master(data->master);
-
 	if (use_dma)
 		pch_free_dma_buf(board_dat, data);
 
 	pci_iounmap(board_dat->pdev, data->io_remap_addr);
-
-	spi_master_put(data->master);
+	spi_unregister_master(data->master);
 }
 #ifdef CONFIG_PM
 static int pch_spi_pd_suspend(struct platform_device *pd_dev,
