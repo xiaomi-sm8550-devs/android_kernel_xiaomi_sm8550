@@ -1124,29 +1124,8 @@ static void handle_message(struct battery_chg_dev *bcdev, void *data,
 
 static struct power_supply_desc usb_psy_desc;
 
-#define FG_SOC_THRESHOLD 90
-/*
- *	Calculates the weighted average of batt_soc and xm_soc:
- *	If batt_soc <= FG_SOC_THRESHOLD -> returns xm_soc
- *	Otherwise -> returns the weighted average, so that as batt_soc approaches the threshold, the
- *	returned value approaches to xm_soc
- */
-static u32 xm_calculate_soc(u32 batt_soc, u32 xm_soc) {
-	u32 range, batt_diff;
-
-	range = 100 - FG_SOC_THRESHOLD;
-	batt_diff = batt_soc - FG_SOC_THRESHOLD;
-
-	if (batt_soc <= FG_SOC_THRESHOLD)
-		return xm_soc;
-
-	return mult_frac(batt_soc, batt_diff, range) + mult_frac(xm_soc, range - batt_diff, range);
-}
-
 static u32 xm_get_battery_capacity(struct battery_chg_dev *bcdev) {
-	struct psy_state *pst;
 	struct psy_state *xm_pst;
-	u32 batt_soc, xm_soc, ret_soc;
 	int rc;
 
 	if (!bcdev) {
@@ -1154,19 +1133,7 @@ static u32 xm_get_battery_capacity(struct battery_chg_dev *bcdev) {
 		return 0;
 	}
 
-	pst = &bcdev->psy_list[PSY_TYPE_BATTERY];
 	xm_pst = &bcdev->psy_list[PSY_TYPE_XM];
-
-	if (!pst || !xm_pst) {
-		pr_err("pst and/or xm_pst is null");
-		return 0;
-	}
-
-	rc = read_property_id(bcdev, pst, BATT_CAPACITY);
-	if (rc < 0) {
-		pr_err("Could not read BATT_CAPACITY from pst");
-		return 0;
-	}
 
 	rc = read_property_id(bcdev, xm_pst, XM_PROP_FG1_RSOC);
 	if (rc < 0) {
@@ -1174,14 +1141,7 @@ static u32 xm_get_battery_capacity(struct battery_chg_dev *bcdev) {
 		return 0;
 	}
 
-	batt_soc = DIV_ROUND_CLOSEST(pst->prop[BATT_CAPACITY], 100);
-	xm_soc = xm_pst->prop[XM_PROP_FG1_RSOC];
-
-	ret_soc = xm_calculate_soc(batt_soc, xm_soc);
-
-	pr_info("batt_soc %d, xm_soc %d, ret_soc %d", batt_soc, xm_soc, ret_soc);
-
-	return ret_soc;
+	return xm_pst->prop[XM_PROP_FG1_RSOC];
 }
 
 static void battery_chg_update_usb_type_work(struct work_struct *work)
